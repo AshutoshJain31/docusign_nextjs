@@ -1,7 +1,23 @@
-import React, { useState } from 'react';
-import { FileSignature, Upload, Edit, Code, ArrowRight, File } from 'lucide-react';
-import { PDFViewer } from './PDFViewer';
+//@ts-nocheck
+import React, { useState } from "react";
+import {
+  FileSignature,
+  Upload,
+  Edit,
+  Code,
+  ArrowRight,
+  File,
+} from "lucide-react";
+import dynamic from "next/dynamic";
+interface PDFViewerProps {
+  file: string;
+  onClose: () => void;
+}
 
+const PDFViewer = dynamic<PDFViewerProps>(
+  () => import("./PDFViewer").then((mod) => mod.default),
+  { ssr: false }
+);
 
 function Home() {
   const [isDragging, setIsDragging] = useState(false);
@@ -22,18 +38,18 @@ function Home() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile && droppedFile.type === 'application/pdf') {
+    if (droppedFile && droppedFile.type === "application/pdf") {
       setFile(droppedFile);
       setShowPDFViewer(true);
     }
   };
-console.log({file});
+  console.log({ file });
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (selectedFile && selectedFile.type === 'application/pdf') {
+    if (selectedFile && selectedFile.type === "application/pdf") {
       setFile(selectedFile);
       setShowPDFViewer(true);
     }
@@ -48,24 +64,45 @@ console.log({file});
             <FileSignature className="h-6 w-6 text-purple-600" />
             <span className="font-bold text-xl">DocuSign</span>
           </div>
-          
+
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="md:hidden p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <div className="space-y-2">
-              <span className={`block w-6 h-0.5 bg-gray-600 transition-transform ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
-              <span className={`block w-6 h-0.5 bg-gray-600 ${isMenuOpen ? 'opacity-0' : ''}`}></span>
-              <span className={`block w-6 h-0.5 bg-gray-600 transition-transform ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+              <span
+                className={`block w-6 h-0.5 bg-gray-600 transition-transform ${
+                  isMenuOpen ? "rotate-45 translate-y-1.5" : ""
+                }`}
+              ></span>
+              <span
+                className={`block w-6 h-0.5 bg-gray-600 ${
+                  isMenuOpen ? "opacity-0" : ""
+                }`}
+              ></span>
+              <span
+                className={`block w-6 h-0.5 bg-gray-600 transition-transform ${
+                  isMenuOpen ? "-rotate-45 -translate-y-1.5" : ""
+                }`}
+              ></span>
             </div>
           </button>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#features" className="text-gray-600 hover:text-purple-600">Features</a>
-            <a href="#developers" className="text-gray-600 hover:text-purple-600">Developers</a>
-            <a href="#pricing" className="text-gray-600 hover:text-purple-600">Pricing</a>
+            <a href="#features" className="text-gray-600 hover:text-purple-600">
+              Features
+            </a>
+            <a
+              href="#developers"
+              className="text-gray-600 hover:text-purple-600"
+            >
+              Developers
+            </a>
+            <a href="#pricing" className="text-gray-600 hover:text-purple-600">
+              Pricing
+            </a>
             <button className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
               Sign Up Free
             </button>
@@ -73,11 +110,32 @@ console.log({file});
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden absolute w-full left-0 bg-white border-b transition-all duration-300 ${isMenuOpen ? 'top-full opacity-100 visible' : 'top-[110%] opacity-0 invisible'}`}>
+        <div
+          className={`md:hidden absolute w-full left-0 bg-white border-b transition-all duration-300 ${
+            isMenuOpen
+              ? "top-full opacity-100 visible"
+              : "top-[110%] opacity-0 invisible"
+          }`}
+        >
           <div className="px-4 py-4 space-y-4">
-            <a href="#features" className="block text-gray-600 hover:text-purple-600">Features</a>
-            <a href="#developers" className="block text-gray-600 hover:text-purple-600">Developers</a>
-            <a href="#pricing" className="block text-gray-600 hover:text-purple-600">Pricing</a>
+            <a
+              href="#features"
+              className="block text-gray-600 hover:text-purple-600"
+            >
+              Features
+            </a>
+            <a
+              href="#developers"
+              className="block text-gray-600 hover:text-purple-600"
+            >
+              Developers
+            </a>
+            <a
+              href="#pricing"
+              className="block text-gray-600 hover:text-purple-600"
+            >
+              Pricing
+            </a>
             <button className="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
               Sign Up Free
             </button>
@@ -89,16 +147,18 @@ console.log({file});
       <section className="py-12 sm:py-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-            Document Signing <span className="text-yellow-400">for Everyone</span>
+            Document Signing{" "}
+            <span className="text-yellow-400">for Everyone</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Fast, secure, and legally binding electronic signatures for businesses and individuals
+            Fast, secure, and legally binding electronic signatures for
+            businesses and individuals
           </p>
-          
+
           {/* Document Upload Area */}
-          <div 
+          <div
             className={`max-w-2xl mx-auto mb-8 sm:mb-12 p-4 sm:p-8 border-2 border-dashed rounded-lg transition-colors ${
-              isDragging ? 'border-purple-600 bg-purple-50' : 'border-gray-300'
+              isDragging ? "border-purple-600 bg-purple-50" : "border-gray-300"
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -109,9 +169,11 @@ console.log({file});
                 <File className="h-8 w-8 text-purple-600" />
                 <div className="text-center sm:text-left">
                   <p className="font-semibold">{file.name}</p>
-                  <p className="text-sm text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <p className="text-sm text-gray-500">
+                    {(file.size / 1024 / 1024).toFixed(2)} MB
+                  </p>
                 </div>
-                <button 
+                <button
                   onClick={() => {
                     setFile(null);
                     setShowPDFViewer(false);
@@ -124,7 +186,9 @@ console.log({file});
             ) : (
               <div className="text-center">
                 <Upload className="h-8 w-8 sm:h-12 sm:w-12 text-purple-600 mx-auto mb-3 sm:mb-4" />
-                <p className="text-base sm:text-lg mb-2">Drag and drop your document here</p>
+                <p className="text-base sm:text-lg mb-2">
+                  Drag and drop your document here
+                </p>
                 <p className="text-gray-500 mb-4">or</p>
                 <label className="inline-block bg-purple-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-purple-700 transition cursor-pointer text-sm sm:text-base">
                   Choose File
@@ -144,10 +208,7 @@ console.log({file});
 
           {/* PDF Viewer Modal */}
           {showPDFViewer && file && (
-            <PDFViewer
-              file={file}
-              onClose={() => setShowPDFViewer(false)}
-            />
+            <PDFViewer file={file} onClose={() => setShowPDFViewer(false)} />
           )}
 
           <button className="w-full sm:w-auto bg-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg hover:bg-purple-700 transition">
@@ -163,9 +224,14 @@ console.log({file});
             Trusted by businesses and individuals
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 opacity-60">
-            {Array(8).fill(0).map((_, i) => (
-              <div key={i} className="h-8 sm:h-12 bg-gray-200 rounded animate-pulse"></div>
-            ))}
+            {Array(8)
+              .fill(0)
+              .map((_, i) => (
+                <div
+                  key={i}
+                  className="h-8 sm:h-12 bg-gray-200 rounded animate-pulse"
+                ></div>
+              ))}
           </div>
         </div>
       </section>
@@ -173,10 +239,14 @@ console.log({file});
       {/* Features */}
       <section id="features" className="py-16 sm:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-12 sm:mb-16">eSigning made simple</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-12 sm:mb-16">
+            eSigning made simple
+          </h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-12">
             <FeatureCard
-              icon={<Upload className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500" />}
+              icon={
+                <Upload className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500" />
+              }
               title="Drag and drop"
               description="Upload your documents easily and get them signed in minutes"
             />
@@ -186,7 +256,9 @@ console.log({file});
               description="Add signatures, text, dates and more with our intuitive editor"
             />
             <FeatureCard
-              icon={<FileSignature className="h-6 w-6 sm:h-8 sm:w-8 text-green-500" />}
+              icon={
+                <FileSignature className="h-6 w-6 sm:h-8 sm:w-8 text-green-500" />
+              }
               title="Instant sign"
               description="Sign documents instantly on any device, anywhere, anytime"
             />
@@ -195,9 +267,14 @@ console.log({file});
       </section>
 
       {/* Developer Section */}
-      <section id="developers" className="bg-gray-900 text-white py-16 sm:py-20 px-4 sm:px-6">
+      <section
+        id="developers"
+        className="bg-gray-900 text-white py-16 sm:py-20 px-4 sm:px-6"
+      >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12">Tailor-made for developers</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12">
+            Tailor-made for developers
+          </h2>
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div className="space-y-6 sm:space-y-8">
               <FeatureItem
@@ -216,7 +293,8 @@ console.log({file});
             <div className="bg-gray-800 p-4 sm:p-6 rounded-lg overflow-x-auto">
               <Code className="text-purple-400 mb-4" />
               <pre className="text-xs sm:text-sm text-purple-400">
-                <code>{`
+                <code>
+                  {`
 const docusign = require('docusign-api');
 
 const signature = await docusign.sign({
@@ -233,7 +311,9 @@ const signature = await docusign.sign({
       {/* FAQ Section */}
       <section className="py-16 sm:py-20 px-4 sm:px-6 bg-gray-50">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">Frequently asked questions</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">
+            Frequently asked questions
+          </h2>
           <div className="space-y-4 sm:space-y-6">
             <FaqItem
               question="Is it legally binding?"
@@ -254,7 +334,9 @@ const signature = await docusign.sign({
       {/* CTA Section */}
       <section className="py-16 sm:py-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Get started now</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">
+            Get started now
+          </h2>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button className="bg-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg hover:bg-purple-700 transition flex items-center justify-center">
               Sign up free <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
@@ -288,8 +370,12 @@ const signature = await docusign.sign({
           <div>
             <h3 className="font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-sm sm:text-base text-gray-600">
-              <li className="hover:text-purple-600 cursor-pointer">Documentation</li>
-              <li className="hover:text-purple-600 cursor-pointer">API Reference</li>
+              <li className="hover:text-purple-600 cursor-pointer">
+                Documentation
+              </li>
+              <li className="hover:text-purple-600 cursor-pointer">
+                API Reference
+              </li>
               <li className="hover:text-purple-600 cursor-pointer">Support</li>
             </ul>
           </div>
@@ -307,7 +393,15 @@ const signature = await docusign.sign({
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
   return (
     <div className="p-4 sm:p-6 rounded-lg border hover:shadow-lg transition">
       <div className="mb-4">{icon}</div>
@@ -317,7 +411,13 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode; titl
   );
 }
 
-function FeatureItem({ title, description }: { title: string; description: string }) {
+function FeatureItem({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
     <div>
       <h3 className="text-lg sm:text-xl font-semibold mb-2">{title}</h3>

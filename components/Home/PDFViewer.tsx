@@ -1,21 +1,21 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { PDFDocument } from "pdf-lib";
-
-import { AlertDialog, AlertDialogTrigger } from "../ui/alert-dialog";
 import { SignatureCanvas } from "./SignatureCanvas";
 import DigitalSignatureCanvas from "./DigitalSignatureCanvas";
 
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-console.log({this:pdfjs.GlobalWorkerOptions.workerSrc});
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 interface PDFViewerProps {
   file: File;
   onClose: () => void;
 }
 
-export function PDFViewer({ file, onClose }: PDFViewerProps) {
+function PDFViewer({ file, onClose }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [showSignatureCanvas, setShowSignatureCanvas] = useState(false);
@@ -39,7 +39,7 @@ export function PDFViewer({ file, onClose }: PDFViewerProps) {
     }));
     setShowSignatureCanvas(false);
   };
-
+  console.log({ file });
   const handleSaveDocument = async () => {
     try {
       const existingPdfBytes = await file.arrayBuffer();
@@ -145,3 +145,4 @@ export function PDFViewer({ file, onClose }: PDFViewerProps) {
     </div>
   );
 }
+export default PDFViewer;

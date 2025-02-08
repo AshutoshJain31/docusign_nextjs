@@ -21,7 +21,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, X } from "lucide-react";
 
 export default function DigitalSignatureCanvas() {
   const [text, setText] = useState("");
@@ -51,7 +51,12 @@ export default function DigitalSignatureCanvas() {
         </AlertDialogTrigger>
         <AlertDialogContent>
           <div className="flex flex-col">
-            <h1>Enter Your Signature</h1>
+            <div className="flex justify-between">
+              <h1>Enter Your Signature</h1>
+              <AlertDialogCancel>
+                <X />
+              </AlertDialogCancel>
+            </div>
             <input
               type="text"
               className="border-2 w-full text-xl px-2 my-2 rounded-md"
