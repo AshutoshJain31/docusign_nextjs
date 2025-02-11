@@ -91,18 +91,18 @@ function PDFViewer({ file, onClose }: PDFViewerProps) {
             Page {currentPage} of {numPages}
           </span>
         </div>
-        <div className="space-x-2">
-          <DigitalSignatureCanvas />
+        <div className="flex">
+          <DigitalSignatureCanvas/>
 
           <button
             onClick={() => handleAddSignature(currentPage)}
-            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
+            className="px-4 my-6 mx-2 bg-purple-600 text-white rounded hover:bg-purple-700"
           >
             Add Signature
           </button>
           <button
             onClick={handleSaveDocument}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            className="px-4 my-6 bg-green-600 text-white rounded hover:bg-green-700"
           >
             Save Document
           </button>

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Slider } from "@/components/ui/slider";
 import {
   Select,
@@ -8,40 +8,55 @@ import {
   SelectTrigger,
   SelectValue,
   SelectGroup,
-  SelectLabel,
 } from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Check, ChevronsUpDown, X } from "lucide-react";
+import { X } from "lucide-react";
 
 export default function DigitalSignatureCanvas() {
   const [text, setText] = useState("");
   const [color, setColor] = useState("#1A1A1A");
   const [fontSize, setFontSize] = useState(20);
   const [font, setFont] = useState("Times New Roman");
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const fonts = [
-    { name: "Roboto", class: "font-roboto", value: "Roboto" },
-    { name: "Lobster", class: "font-lobster", value: "Lobster" },
-    { name: "Poppins", class: "font-poppins", value: "Poppins" },
-    {
-      name: "Playfair Display",
-      class: "font-playfair",
-      value: "Playfair Display",
-    },
-    { name: "Montserrat", class: "font-montserrat", value: "Montserrat" },
-    { name: "Courier Prime", class: "font-courier", value: "Courier Prime" },
+    { name: "Roboto", value: "Roboto" },
+    { name: "Lobster", value: "Lobster" },
+    { name: "Poppins", value: "Poppins" },
+    { name: "Playfair Display", value: "Playfair Display" },
+    { name: "Montserrat", value: "Montserrat" },
+    { name: "Courier Prime", value: "Courier Prime" },
   ];
-  console.log(font, color, fontSize);
+
+  // Draw text on canvas whenever text, color, font, or fontSize changes
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawings
+        ctx.font = `${fontSize}px ${font}`;
+        ctx.fillStyle = color;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+      }
+    }
+  }, [text, color, fontSize, font]);
+
+  const handleSaveSignature = () => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const dataUrl = canvas.toDataURL("image/png");
+      console.log("Saved Signature Data URL:", dataUrl);
+    }
+  };
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -63,13 +78,13 @@ export default function DigitalSignatureCanvas() {
               placeholder="Type your signature"
               onChange={(e) => setText(e.target.value)}
             />
-            <h2 className="">Display Area</h2>
-            <p
-              className="border-2 my-2 py-2 px-2 rounded-lg"
-              style={{ color, fontSize: `${fontSize}px`, fontFamily: font }}
-            >
-              {text}
-            </p>
+            <h2>Display Area</h2>
+            <canvas
+              ref={canvasRef}
+              className="border-2 my-2 py-2 px-2 rounded-lg w-full h-32 bg-white"
+              width={500}
+              height={100}
+            />
           </div>
           <div className="flex justify-between">
             <div>
@@ -110,6 +125,14 @@ export default function DigitalSignatureCanvas() {
                 onChange={(e) => setFontSize(Number(e.target.value))}
               />
             </div>
+          </div>
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={handleSaveSignature}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+              Save Signature
+            </button>
           </div>
         </AlertDialogContent>
       </AlertDialog>
